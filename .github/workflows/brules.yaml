@@ -1,0 +1,35 @@
+name: brules
+
+on: 
+  pull_request_target:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - edited
+
+jobs:
+  checkbranches:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check branches
+        run: |
+          BASE_BRANCH="${{github.base_ref}}"
+          HEAD_BRANCH="${{github.head_ref}}"
+
+          if ["$BASE_BRANCH" == "stage"] && ["$HEAD_BRANCH" != "devel"]; then
+            echo "Not allowed"
+            exit 1
+          elif ["$BASE_BRANCH" == "prod"] && ["$HEAD_BRANCH" != "stage"]; then
+            echo "Not allowed"
+            exit 1
+          elif ["$BASE_BRANCH" == "devel"] && ["$HEAD_BRANCH" == "$BASE_BRANCH"]; then
+            echo "Not allowed"
+            exit 1
+          elif ["$BASE_BRANCH" == "stage"] && ["$HEAD_BRANCH" == "$BASE_BRANCH"]; then
+            echo "Not allowed"
+            exit 1
+          elif ["$BASE_BRANCH" == "prod"] && ["$HEAD_BRANCH" == "$BASE_BRANCH"]; then
+            echo "Not allowed"
+            exit 1
+          fi
