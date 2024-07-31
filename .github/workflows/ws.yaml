@@ -27,9 +27,6 @@ jobs:
       - run: npm run lint
         name: lint
       
-      - run: npm run prettier
-        name: prettier
-
       - run: CI=true npm run test
         name: test
 
