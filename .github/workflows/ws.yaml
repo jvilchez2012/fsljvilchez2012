@@ -1,0 +1,46 @@
+name: ws
+
+on: 
+  workflow_dispatch:
+  push:
+    branches:
+    - devel
+    - stage
+    - prod
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '15.x'
+
+
+      - run: npm install
+        name: Dependencies Installation
+      
+      - run: npm run lint
+        name: lint
+      
+      - run: npm run prettier
+        name: prettier
+
+      - run: CI=true npm run test
+        name: test
+
+      - run: npm run build
+        name: build
+      
+      - name: upload the artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-artifact
+          path: build
+      
+
+        
